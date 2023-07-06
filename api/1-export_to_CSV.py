@@ -4,9 +4,9 @@ import json
 import sys
 
 if __name__ == '__main__':
-    employee_id = sys.argv[1]
-    user_url = "https://jsonplaceholder.typicode.com/users/{}".format(employee_id)
-    todos_url = "https://jsonplaceholder.typicode.com/users/{}/todos".format(employee_id)
+    id = sys.argv[1]
+    user_url = "https://jsonplaceholder.typicode.com/users/{}".format(id)
+    todos_url = "https://jsonplaceholder.typicode.com/users/{}/todos".format(id)
 
     with urllib.request.urlopen(user_url) as user_response:
         user_info = json.loads(user_response.read().decode())
@@ -20,10 +20,10 @@ if __name__ == '__main__':
     number_of_done_tasks = len(task_completed)
     total_number_of_tasks = len(todos_info)
 
-    with open(str(employee_id) + '.csv', "w") as file:
+    with open(str(id) + '.csv', "w") as file:
         for task in todos_info:
             file.write(
-                '"' + str(employee_id) + '",' +
+                '"' + str(id) + '",' +
                 '"' + employee_username + '",' +
                 '"' + str(task["completed"]) + '",' +
                 '"' + task["title"] + '",' + "\n"
