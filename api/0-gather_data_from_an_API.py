@@ -6,7 +6,7 @@ from sys import argv
 
 if __name__ == "__main__":
     """
-        request user info by employee ID
+        request employee information
     """
     request_employee = urllib.request.urlopen('https://jsonplaceholder.typicode.com/users/{}/'.format(argv[1]))
     """
@@ -43,9 +43,9 @@ if __name__ == "__main__":
     """
     EMPLOYEE_NAME = employee_name
     TOTAL_NUMBER_OF_TASKS = len(tasks)
-    NUMBER_OF_DONE_TASKS = len([k for k, v in tasks.items() if v is True])
+    NUMBER_OF_DONE_TASKS = len([z for z, n in tasks.items() if n is True])
     print("Employee {} is done with tasks({}/{}):".format(
         EMPLOYEE_NAME, NUMBER_OF_DONE_TASKS, TOTAL_NUMBER_OF_TASKS))
-    for k, v in tasks.items():
-        if v is True:
-            print("\t {}".format(k))
+    for z, n in tasks.items():
+        if n is True:
+            print("\t {}".format(z))
