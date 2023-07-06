@@ -1,45 +1,37 @@
 #!/usr/bin/python3
-"""
-    python script that returns TODO list progress for a given employee ID
-"""
+"""module"""
 import json
-import requests
 from sys import argv
-
-
+import urllib.request
 if __name__ == "__main__":
     """
         request user info by employee ID
     """
-    request_employee = requests.get(
-        'https://jsonplaceholder.typicode.com/users/{}/'.format(argv[1]))
-    """
-        convert json to dictionary
-    """
-    employee = json.loads(request_employee.text)
-    """
-        extract employee name
-    """
-    employee_name = employee.get("name")
+    employee_url = 'https://jsonplaceholder.typicode.com/users/{}/'.format(argv[1])
+    with urllib.request.urlopen(employee_url) as employee_response:
+        employee_data = employee_response.read().decode()
+        employee = json.loads(employee_data)
+        """
+            extract employee name
+        """
+        employee_name = employee.get("name")
 
     """
         request user's TODO list
     """
-    request_todos = requests.get(
-        'https://jsonplaceholder.typicode.com/users/{}/todos'.format(argv[1]))
-    """
-        dictionary to store task status in boolean format
-    """
-    tasks = {}
-    """
-        convert json to list of dictionaries
-    """
-    employee_todos = json.loads(request_todos.text)
-    """
-        loop through dictionary & get completed tasks
-    """
-    for dictionary in employee_todos:
-        tasks.update({dictionary.get("title"): dictionary.get("completed")})
+    todos_url = 'https://jsonplaceholder.typicode.com/users/{}/todos'.format(argv[1])
+    with urllib.request.urlopen(todos_url) as todos_response:
+        todos_data = todos_response.read().decode()
+        employee_todos = json.loads(todos_data)
+        """
+            dictionary to store task status in boolean format
+        """
+        tasks = {}
+        """
+            loop through dictionary & get completed tasks
+        """
+        for dictionary in employee_todos:
+            tasks.update({dictionary.get("title"): dictionary.get("completed")})
 
     """
         return name, total number of tasks & completed tasks
