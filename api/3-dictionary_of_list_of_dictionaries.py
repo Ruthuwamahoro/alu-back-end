@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """python script to records all tasks from all employees"""
-import urllib.request
 import json
+import urllib.request
 
 
 def get_employee_task(employee_id):
