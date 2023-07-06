@@ -1,29 +1,22 @@
 #!/usr/bin/python3
-"""python script that returns the information about employee's TODOlist progresss"""
-
-import json
+"""Python script that returns the employee's TODOlist"""
 import requests
 from sys import argv
 
 if __name__ == '__main__':
-    url = 'https://jsonplaceholder.typicode.com/users/{}/'
-    employee_request = requests.get(url.format(argv[1]))
-    """convert the employee's response from json to python's dictionary"""
-    employee_json_data = json.loads(employee_request.text)
-    """extract employee name"""
-    employee_name = employee_json_data.get("name")
-    """requesting employee's TODO list"""
-    request_todolist = requests.get('https://jsonplaceholder.typicode.com/users/{}/todos'.format(argv[1]))
-    tasks = {}
-    employeetodo_list = json.loads(request_todolist)
-    """looping through todo list"""
-    for list in employeetodo_list:
-        tasks.update({list.get("title"): list.get("completed")})
-        """returning the name and total number of the tasks"""
+    employee_url = "https://jsonplaceholder.typicode.com/users/{}" \
+        .format(argv[1])
+    todos_url = "https://jsonplaceholder.typicode.com/users/{}/todos/" \
+        .format(argv[1])
+
+    employee_request = requests.request('GET', employee_url).json()
+    employee_todos = requests.request('GET' , todos_url).json()
+    employee_name = employee_request["name"]
+    tasks_completed = list(filter(lambda obj: (obj["completed"] is True),employee_todos))
     EMPLOYEE_NAME = employee_name
-    NUMBER_OF_DONE_TASKS = len(tasks)
-    TOTAL_NUMBER_OF_TASKS = len([z for z,n in tasks.items() if n is True])
-    print("employee {} is done with tasks({}/{})".format(EMPLOYEE_NAME,NUMBER_OF_DONE_TASKS,TOTAL_NUMBER_OF_TASKS))
-    for z ,n in tasks.items():
-        if n is True:
-            print("\t {}".format(z))
+    NUMBER_OF_DONE_TASKS = len(tasks_completed)
+    TOTAL_NUMBER_OF_TASKS = len(employee_todos)
+    print("Employee {} is done with tasks({}/{}):".
+          format(EMPLOYEE_NAME, NUMBER_OF_DONE_TASKS, TOTAL_NUMBER_OF_TASKS))
+
+    [print("\t " + task["title"]) for task in tasks_completed]
