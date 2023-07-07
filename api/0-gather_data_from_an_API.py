@@ -4,24 +4,26 @@ import json
 import sys
 import urllib.request
 """module"""
-if __main__ == '__name__' :
+if __name__ == '__main__' :
     """converting the arguments into integers"""
-    user_id = int(sys.argv[1])
+    EMPLOYEE_ID = int(sys.argv[1])
     """using url to retrieve a data about employees"""
-    base_url = "https://jsonplaceholder.typicode.com"
-    employee_url = f"{base_url}/users/{user_id}"
-    todo_url = f"{base_url}/todos?userId={user_id}"
+    BASE_URL = "https://jsonplaceholder.typicode.com"
+    employee_url = "{}/users/{}".format(BASE_URL,EMPLOYEE_ID)
+    todo_url = "{}/todos?userId={}".format(BASE_URL, EMPLOYEE_ID)
     """open employee url using urllib module"""
     with urllib.request.urlopen(employee_url) as f:
-        employee_info = json.load(f)
+        employee_info = json.loads(f.read().decode('utf-8'))
     with urllib.request.urlopen(todo_url) as response:
-        data = json.load(response)
+        data = json.loads(response.read().decode('utf-8'))
     """retieving a data about employee name,task completed and total number of tasks"""
     EMPLOYEE_NAME = employee_info["name"]
     TOTAL_NUMBER_OF_TASKS = len(data)
-    NUMBER_OF_DONE_TASKS = [task for task in data if task["completed"]]
+    NUMBER_OF_DONE_TASKS = len([task for task in data if task["completed"]])
 
 
-    print(f"Employee {EMPLOYEE_NAME} is done with tasks({len(NUMBER_OF_DONE_TASKS)}/{TOTAL_NUMBER_OF_TASKS}):")
-    for task in NUMBER_OF_DONE_TASKS:
-        print(f"\t{task['title']}")
+    print("Employee {} is done with tasks({}/{}):".format(EMPLOYEE_NAME, NUMBER_OF_DONE_TASKS, TOTAL_NUMBER_OF_TASKS))
+   
+    for task in data:
+        if task["completed"]:
+            print("\t{}".format(task["title"]))
