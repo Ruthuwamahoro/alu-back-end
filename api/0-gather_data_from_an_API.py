@@ -1,46 +1,27 @@
 #!/usr/bin/python3
-"""module"""
+"""python script that returns the value of employee TODOlist"""
 import json
-from sys import argv
+import sys
 import urllib.request
-if __name__ == "__main__":
-    """
-        request user info by employee ID
-    """
-    employee_url = 'https://jsonplaceholder.typicode.com/users/{}/'.format(argv[1])
-    with urllib.request.urlopen(employee_url) as employee_response:
-        employee_data = employee_response.read().decode()
-        employee = json.loads(employee_data)
-        """
-            extract employee name
-        """
-        employee_name = employee.get("name")
+"""module"""
+if __main__ == '__name__' :
+    """converting the arguments into integers"""
+    user_id = int(sys.argv[1])
+    """using url to retrieve a data about employees"""
+    base_url = "https://jsonplaceholder.typicode.com"
+    employee_url = f"{base_url}/users/{user_id}"
+    todo_url = f"{base_url}/todos?userId={user_id}"
+    """open employee url using urllib module"""
+    with urllib.request.urlopen(employee_url) as f:
+        employee_info = json.load(f)
+    with urllib.request.urlopen(todo_url) as response:
+        data = json.load(response)
+    """retieving a data about employee name,task completed and total number of tasks"""
+    EMPLOYEE_NAME = employee_info["name"]
+    TOTAL_NUMBER_OF_TASKS = len(data)
+    NUMBER_OF_DONE_TASKS = [task for task in data if task["completed"]]
 
-    """
-        request user's TODO list
-    """
-    todos_url = 'https://jsonplaceholder.typicode.com/users/{}/todos'.format(argv[1])
-    with urllib.request.urlopen(todos_url) as todos_response:
-        todos_data = todos_response.read().decode()
-        employee_todos = json.loads(todos_data)
-        """
-            dictionary to store task status in boolean format
-        """
-        tasks = {}
-        """
-            loop through dictionary & get completed tasks
-        """
-        for dictionary in employee_todos:
-            tasks.update({dictionary.get("title"): dictionary.get("completed")})
 
-    """
-        return name, total number of tasks & completed tasks
-    """
-    EMPLOYEE_NAME = employee_name
-    TOTAL_NUMBER_OF_TASKS = len(tasks)
-    NUMBER_OF_DONE_TASKS = len([k for k, v in tasks.items() if v is True])
-    print("Employee {} is done with tasks({}/{}):".format(
-        EMPLOYEE_NAME, NUMBER_OF_DONE_TASKS, TOTAL_NUMBER_OF_TASKS))
-    for k, v in tasks.items():
-        if v is True:
-            print("\t {}".format(k))
+    print(f"Employee {EMPLOYEE_NAME} is done with tasks({len(NUMBER_OF_DONE_TASKS)}/{TOTAL_NUMBER_OF_TASKS}):")
+    for task in NUMBER_OF_DONE_TASKS:
+        print(f"\t{task['title']}")
