@@ -1,15 +1,28 @@
 #!/usr/bin/python3
-"""import module and export data to  csv"""
+""" Call API and store data in CSV """
 import csv
-if __name__ == '__name__':
+import requests
+from sys import argv
 
-    # Specify the CSV file name based on the employee ID
-    csv_filename = "{}.csv".format(EMPLOYEE_ID)
 
-    # Export data to CSV
-    with open(csv_filename, mode='w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])  # Write the header row
+if __name__ == '__main__':
+    employee_id = argv[1]
+    url_todo = 'https://jsonplaceholder.typicode.com/todos/'
+    url_user = 'https://jsonplaceholder.typicode.com/users/'
+    todo = requests.get(url_todo, params={'userId': employee_id})
+    user = requests.get(url_user, params={'id': employee_id})
 
-        for task in data:
-            writer.writerow([EMPLOYEE_ID, EMPLOYEE_NAME, str(task["completed"]), task["title"]])  # Write each task as a row in CSV
+    todo_dict_list = todo.json()
+    user_dict_list = user.json()
+
+    employee = user_dict_list[0].get('username')
+
+    with open("{}.csv".format(employee_id), "a+") as csvfile:
+        csvwriter = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        for task in todo_dict_list:
+            status = task['completed']
+            title = task['title']
+            csvwriter.writerow(["{}".format(employee_id),
+                                "{}".format(employee),
+                                "{}".format(status),
+                                "{}".format(title)])
