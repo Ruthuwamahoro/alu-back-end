@@ -1,30 +1,15 @@
 #!/usr/bin/python3
-import urllib.request
-import json
-import sys
+"""import module and export data to  csv"""
+import csv
+if __name__ == '__name__':
 
-if __name__ == '__main__':
-    id = sys.argv[1]
-    user_url = "https://jsonplaceholder.typicode.com/users/{}".format(id)
-    todos_url = "https://jsonplaceholder.typicode.com/users/{}/todos".format(id)
+    # Specify the CSV file name based on the employee ID
+    csv_filename = "{}.csv".format(EMPLOYEE_ID)
 
-    with urllib.request.urlopen(user_url) as user_response:
-        user_info = json.loads(user_response.read().decode())
+    # Export data to CSV
+    with open(csv_filename, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])  # Write the header row
 
-    with urllib.request.urlopen(todos_url) as todos_response:
-        todos_info = json.loads(todos_response.read().decode())
-
-    employee_name = user_info["name"]
-    employee_username = user_info["username"]
-    task_completed = list(filter(lambda obj: obj["completed"], todos_info))
-    number_of_done_tasks = len(task_completed)
-    total_number_of_tasks = len(todos_info)
-
-    with open(str(id) + '.csv', "w") as file:
-        for task in todos_info:
-            file.write(
-                '"' + str(id) + '",' +
-                '"' + employee_username + '",' +
-                '"' + str(task["completed"]) + '",' +
-                '"' + task["title"] + '",' + "\n"
-            )
+        for task in data:
+            writer.writerow([EMPLOYEE_ID, EMPLOYEE_NAME, str(task["completed"]), task["title"]])  # Write each task as a row in CSV
