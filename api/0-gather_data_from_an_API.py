@@ -20,12 +20,13 @@ if __name__ == '__main__':
     with urllib.request.urlopen(todo_url) as response:
         data = json.loads(response.read().decode('utf-8'))
 
-    """Retrieving data about employee name, completed tasks, and total number of tasks"""
+    """Retrieving data"""
     EMPLOYEE_NAME = employee_info["name"]
     TOTAL_NUMBER_OF_TASKS = len(data)
     NUMBER_OF_DONE_TASKS = len([task for task in data if task["completed"]])
 
-    print("Employee {} is done with tasks({}/{}):".format(EMPLOYEE_NAME, NUMBER_OF_DONE_TASKS, TOTAL_NUMBER_OF_TASKS))
+    print("Employee {} is done with tasks({}/{}):"
+          .format(EMPLOYEE_NAME,NUMBER_OF_DONE_TASKS,TOTAL_NUMBER_OF_TASKS))
 
     for task in data:
         if task["completed"]:
