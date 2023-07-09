@@ -26,7 +26,7 @@ if __name__ == '__main__':
     NUMBER_OF_DONE_TASKS = len([task for task in data if task["completed"]])
 
     print("Employee {} is done with tasks({}/{}):"
-          .format(EMPLOYEE_NAME,NUMBER_OF_DONE_TASKS,TOTAL_NUMBER_OF_TASKS))
+          .format(EMPLOYEE_NAME, NUMBER_OF_DONE_TASKS, TOTAL_NUMBER_OF_TASKS))
 
     for task in data:
         if task["completed"]:
