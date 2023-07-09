@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 """Exports to-do list information for a given employee ID to JSON format."""
 import json
+import sys
 import urllib.parse
 import urllib.request
-import sys
+
 
 if __name__ == "__main__":
-    user_id = sys.argv[1] 
+    user_id = sys.argv[1]
     base_url = "https://jsonplaceholder.typicode.com/"
     user_endpoint = "users/{}".format(user_id)
     todos_endpoint = "todos"
@@ -24,11 +25,16 @@ if __name__ == "__main__":
         todos = json.loads(response.read().decode())
 
     with open("{}.json".format(user_id), "w") as jsonfile:
-        json.dump({user_id: [
+        json.dump(
             {
-                "task": t.get("title"),
-                "completed": t.get("completed"),
-                "username": username
-            }
-            for t in todos
-        ]}, jsonfile)
+                user_id: [
+                    {
+                        "task": t.get("title"),
+                        "completed": t.get("completed"),
+                        "username": username
+                    }
+                    for t in todos
+                ]
+            },
+            jsonfile,
+        )
