@@ -20,8 +20,8 @@ if __name__ == "__main__":
         username = user.get("username")
 
     todos_params = {"userId": user_id}
-    todos_url_with_params = todos_url + "?" + urllib.parse.urlencode(todos_params)
-    with urllib.request.urlopen(todos_url_with_params) as response:
+    new = todos_url + "?" + urllib.parse.urlencode(todos_params)
+    with urllib.request.urlopen(new) as response:
         todos = json.loads(response.read().decode())
 
     with open("{}.json".format(user_id), "w") as jsonfile:
